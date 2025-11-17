@@ -14,7 +14,13 @@ from torch.nn.attention.flex_attention import (
     _mask_mod_signature,
     flex_attention,
 )
-from xformers.ops import AttentionBias, fmha
+try:
+    from xformers.ops import AttentionBias, fmha
+except ImportError:
+    # xformers not available (e.g., on macOS) - use Any as fallback type
+    from typing import Any
+    AttentionBias = Any
+    fmha = None
 
 from bytelatent.tokenizers.constants import EOS_ID
 

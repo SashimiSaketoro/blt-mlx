@@ -23,27 +23,26 @@ dependencies = [
     "sentencepiece>=0.2.0",
     "submitit>=1.5.2",
     "tiktoken>=0.8.0",
+    "torch",
+    "torchaudio",
+    "torchvision",
     "typer>=0.15.3",
     "viztracer>=1.0.3",
     "wandb>=0.19.10",
-    "xformers",
 ]
 
-[[tool.uv.index]]
-name = "torch-nightly-cu121"
-url = "https://download.pytorch.org/whl/nightly/cu121"
-
-
 [tool.uv.sources]
-torch = {index = "torch-nightly-cu121"}
-xformers = { git = "https://github.com/facebookresearch/xformers.git", rev = "de742ec3d64bd83b1184cc043e541f15d270c148" }
+# xformers is optional - it fails to build on macOS, so only include if needed
+# Uncomment the line below if you're on Linux and want to build xformers
+# xformers = { git = "https://github.com/facebookresearch/xformers.git", rev = "de742ec3d64bd83b1184cc043e541f15d270c148" }
 
 [dependency-groups]
 pre_build = [
     "setuptools",
     "ninja",
-    "torch==2.6.0.dev20241112",
 ]
+# xformers is optional - only works on Linux with CUDA
+# Install with: uv sync --group compile_xformers
 compile_xformers = ['xformers']
 dev = [
     "black==24.8.0",
@@ -54,9 +53,10 @@ dev = [
 
 
 [tool.uv]
-no-build-isolation-package = ["xformers"]
+# xformers build isolation disabled only if installing xformers group
+# no-build-isolation-package = ["xformers"]
 index-strategy = "unsafe-best-match"
-override-dependencies = ["torch==2.6.0.dev20241112"]
+# Removed torch override - using standard PyPI torch with MPS support
 
 [tool.isort]
 profile = "black"

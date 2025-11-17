@@ -26,6 +26,22 @@ from modeling byte-sequences.
 We are actively updating the blt code to make it easier to reproduce our results.
 Please file an issue and/or be patient while we make more of our code public!
 
+## macOS / Apple Silicon Support
+
+**This repository has been modified to support macOS with Apple Silicon (M1/M2/M3/M4) using MPS (Metal Performance Shaders).**
+
+For detailed setup instructions, modifications made, and usage guide, see **[MACOS_MPS_SETUP.md](MACOS_MPS_SETUP.md)**.
+
+**Quick macOS Setup:**
+```bash
+git clone https://github.com/facebookresearch/blt
+cd blt
+uv sync  # or use pip: pip install torch torchvision torchaudio && pip install -r requirements.txt
+BLT_SUPPRESS_ATTN_ERROR=1 uv run python tests/test_patching.py  # Test the setup
+```
+
+**Note:** The original repository is configured for CUDA. The macOS modifications make xformers optional and enable MPS support. For full training capabilities, use Linux with CUDA.
+
 ## Quick start
 
 There are three ways you can create your environment.

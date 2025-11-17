@@ -19,7 +19,11 @@ import torch.distributed
 import torch.nn.functional
 import torch.nn.functional as F
 import wandb
-import xformers.profiler
+try:
+    import xformers.profiler
+except ImportError:
+    # xformers not available (e.g., on macOS)
+    xformers = None
 from torch.distributed._tensor import DTensor
 from torch.distributed.checkpoint.stateful import Stateful
 from torch.optim import lr_scheduler
@@ -526,7 +530,7 @@ def train(args: TrainArgs):
             curr_iter_time = round(start_timer.elapsed_time(end_timer) * 1e-3, 4)
 
             # if profiler is active
-            if torch_profiler:
+            if torch_profiler and xformers is not None:
                 xformers.profiler.step()
 
             # log metrics

@@ -15,7 +15,11 @@ from typing import Any, Dict, Optional
 import torch
 import torch.distributed
 import wandb
-import xformers.profiler
+try:
+    import xformers.profiler
+except ImportError:
+    # xformers not available (e.g., on macOS)
+    xformers = None
 from lingua.args import dataclass_from_dict, dump_config, flatten_dict
 from lingua.data import (
     DataArgs,
@@ -451,7 +455,7 @@ def train(args: TrainArgs):
             curr_iter_time = round(start_timer.elapsed_time(end_timer) * 1e-3, 4)
 
             # if profiler is active
-            if torch_profiler:
+            if torch_profiler and xformers is not None:
                 xformers.profiler.step()
 
             # log metrics

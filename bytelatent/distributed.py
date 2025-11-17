@@ -19,7 +19,7 @@ import numpy as np
 import torch
 
 # for no recompute ops
-import xformers.ops
+# import xformers.ops
 from pydantic import BaseModel, ConfigDict
 from torch import distributed as dist
 from torch.distributed import ReduceOp
@@ -46,13 +46,9 @@ default_no_recompute_ops = {
     torch.ops.aten._scaled_dot_product_efficient_attention.default,
     torch.ops.aten._scaled_dot_product_flash_attention.default,
     torch.ops.c10d_functional.reduce_scatter_tensor.default,
-    torch.ops.xformers_flash.flash_fwd.default,
+#     pass  # torch.ops.xformers_flash.flash_fwd.default,
 }
 
-if int(os.environ.get("BLT_ALLOW_MISSING_FLEX_ATTENTION", False)) == 0:
-    default_no_recompute_ops.add(
-        torch.ops.xformers.efficient_attention_forward_cutlass.default
-    )
 
 
 class DistributedArgs(BaseModel):

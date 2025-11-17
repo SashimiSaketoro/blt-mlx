@@ -4,7 +4,11 @@ import os
 
 import torch
 from torch.nn.attention.flex_attention import create_block_mask
-from xformers.ops import fmha
+try:
+    from xformers.ops import fmha
+except ImportError:
+    # xformers not available (e.g., on macOS)
+    fmha = None
 
 logger = logging.getLogger()
 
@@ -132,6 +136,11 @@ def create_causal_mask(
     sliding_window: int | None = None,
 ):
     if attn_impl == "xformers":
+        if fmha is None:
+            raise ImportError(
+                "xformers is required for attn_impl='xformers' but is not installed. "
+                "Install it with: pip install xformers (Linux/CUDA only) or use a different attn_impl."
+            )
         if attn_bias_type is None:
             return fmha.attn_bias.LowerTriangularMask()
         elif attn_bias_type == "causal":

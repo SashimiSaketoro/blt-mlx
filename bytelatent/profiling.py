@@ -8,10 +8,10 @@ from pathlib import Path
 
 import torch.distributed
 import wandb
-import xformers.profiler
+# import xformers.profiler
 from pydantic import BaseModel
 from torch.profiler.profiler import profile
-from xformers.profiler import MemSnapshotsProfiler, PyTorchProfiler
+# from xformers.profiler import MemSnapshotsProfiler, PyTorchProfiler
 
 from bytelatent.distributed import get_is_master
 
@@ -52,7 +52,7 @@ def perfetto_to_html(json_file, html_file):
         output_file.write(string.Template(tmpl).substitute(sub))
 
 
-class PyTorchProfilerWandb(PyTorchProfiler):
+# class PyTorchProfilerWandb(PyTorchProfiler):
     def __init__(self, main_profiler) -> None:
         self.main_profiler = main_profiler
         self.num_steps = 0
@@ -86,7 +86,7 @@ class PyTorchProfilerWandb(PyTorchProfiler):
             wandb.log({"profile_trace": wandb.Html(html_path)})
 
 
-class MemSnapshotsProfilerWandb(MemSnapshotsProfiler):
+# class MemSnapshotsProfilerWandb(MemSnapshotsProfiler):
     def __exit__(self, exc_type, exc_val, exc_tb):
         super().__exit__(exc_type, exc_val, exc_tb)
         if get_is_master() and wandb.run is not None:
